@@ -1,0 +1,22 @@
+@CHARSET "UTF-8";
+html,body{
+	margin: 0;
+	padding: 0;
+}
+
+
+.kb-map{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.kb-map .i-map-image{
+	width: 100%;
+}
+.i-map-svg{
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+}
