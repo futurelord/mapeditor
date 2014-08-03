@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="css/mapui.css">
+<script src="js/json2-min.js"></script>
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="js/jquery.mousewheel.min.js"></script>
+<script src="js/module/sea.js"></script>
+</head>
+<body>
+<div id="workdiv" style="height: 800px">
+</div>
+<script>
+seajs.use(['map/svgview.js'],function(Svgview){
+	
+	var view ;
+	$.get('mapdata.json',{id:1},function(map){
+		if (map){
+			view = new Svgview({
+				container : 'workdiv',
+			}).setMapData(map);
+		}
+	})
+	
+});
+</script>
+</body>
+</html>
