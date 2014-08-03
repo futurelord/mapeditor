@@ -70,13 +70,15 @@ define(function(require, exports, module) {
 	};
 	
 	SvgView.prototype._bindDomEvent = function(){
-		var me = this;
+		var me = this,status = $('#'+this.container+' .kb-icon-bar .kb-active').attr('_status');
 		this.setWidth($('#'+this.el+' .kb-view').width());
 		$('#'+this.container+' .kb-icon-bar').on('click','.kb-icon',function(){
 			$(this).addClass('kb-active').siblings('.kb-active').removeClass('kb-active');
 			me.setStatus(this.getAttribute('_status'));
 		});
-		
+		if (status){
+			this.setStatus(status);
+		}
 		$('#'+this.el).on('mouseover',this,this._mouseoverHandler).on('mouseout',this,this._mouseoutHandler).on('click',this,this._clickHandler);
 	};
 	
@@ -148,7 +150,9 @@ define(function(require, exports, module) {
 							.on('mousemoving','[_selected="true"]',me,me._selectedMovingHandler)
 							.on('mousemovingstart','[_selected="true"]',me,me._selectedStartMovingHandler)
 							.on('contextmenu',me,me._selectContextmenuHandler);
-						me.map.clearSelect();
+						if (me.map){
+							me.map.clearSelect();
+						}
 					},
 					off : function(){
 						$('#'+me.el+' .kb-view')

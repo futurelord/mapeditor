@@ -1,0 +1,26 @@
+servers/
+
+*/target/
+*/classes/
+
+*.class
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.MF
+*.bak
+
+
+##eclips, svn file
+.mymetadata
+.metadata/
+.settings/
+.project
+.classpath
+
+##tomcatplugin32
+.tomcatplugin
+.#webclasspath
+work/
