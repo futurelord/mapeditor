@@ -37,6 +37,10 @@ define(function(require, exports, module) {
 		return this.data.y;
 	};
 	
+	Node.prototype.getData = function(){
+		return this.data;
+	};
+	
 	Node.prototype.storePos = function(){
 		this._x = this.data.x;
 		this._y = this.data.y;
@@ -63,9 +67,13 @@ define(function(require, exports, module) {
 			this.id = UI.newid('n');
 		}
 		
-		this.n1 = this.data.n1 || this.map.getNode(this.data.node1);
-		this.n2 = this.data.n2 || this.map.getNode(this.data.node2);
+		this.n1 = this.data.n1 || this.map.getNode(this.data.nodeid1);
+		this.n2 = this.data.n2 || this.map.getNode(this.data.nodeid2);
 		
+	};
+	
+	Line.prototype.prototype.getData = function(){
+		return this.data;
 	};
 	
 	/**
@@ -113,7 +121,7 @@ define(function(require, exports, module) {
 	 */
 	Map.prototype.setData = function(map){
 		this.map = map;
-		var nodes = map.nodes,lines = map.lines,i,node,line;
+		var nodes = map.nodes,lines = map.node_distances,i,node,line;
 		this.clear();
 		if (nodes){
 			for (i=0;node=nodes[i];i+=1){
@@ -161,6 +169,9 @@ define(function(require, exports, module) {
 	 */
 	Map.prototype.addLine = function(data,silent){
 		var line = new Line(data,this);
+		if (!line.n1 || !line.n2){
+			return;
+		}
 		this._lineMap[line.id] = line;
 		this._lines.push(line);
 		this._lineMapOfNode1Node2[line.n1.id+'_'+line.n2.id] = line;

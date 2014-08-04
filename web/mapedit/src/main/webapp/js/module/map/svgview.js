@@ -55,7 +55,7 @@ define(function(require, exports, module) {
 		s.push('<hr>');
 	
 		// 地图操作区域 start
-		s.push('<div id="',this.el,'" class="kb-workspace" style="width: 100%;height: ',$('#'+this.container).height - bntBarHeight,'px;overflow: auto;">');
+		s.push('<div id="',this.el,'" class="kb-workspace" style="width: 100%;height: ',$('#'+this.container).height() - bntBarHeight,'px;overflow: auto;">');
 		s.push('<div class="kb-view">');
 		s.push('<div class="kb-image"><img src="',this.image,'" draggable=false /></div>');
 		s.push('<div class="kb-svg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" version="1.1"></svg></div>');
