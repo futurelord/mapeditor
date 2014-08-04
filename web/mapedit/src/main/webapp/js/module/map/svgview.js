@@ -14,8 +14,7 @@ define(function(require, exports, module) {
 		lineSelectedStyle = "stroke:#097AB8;stroke-width:7;",
 		nodeStyle = "stroke:#555555;stroke-width:3;fill:white;",
 		nodeMouseOverStyle = "stroke:#444444;stroke-width:4;fill:white;",
-		nodeSelectedStyle = "stroke:#097AB8;stroke-width:4;fill:white;",
-		bntBarHeight = 40;
+		nodeSelectedStyle = "stroke:#097AB8;stroke-width:4;fill:white;";
 	
 	
 	/**
@@ -44,7 +43,7 @@ define(function(require, exports, module) {
 		
 		this.el = UI.newid('m');
 		
-		var s = [];
+		var s = [],h;
 		
 		s.push('<div class="kb-icon-bar">');
 		s.push('<a href="javascript:;" class="kb-icon kb-active" _status="select" >SELECT</a>');
@@ -52,10 +51,9 @@ define(function(require, exports, module) {
 		s.push('<a href="javascript:;" class="kb-icon" _status="drawline">DRAW LINE</a>');
 		s.push('<a href="javascript:;" class="kb-icon" _status="dropnode">DRAW NODE</a>');
 		s.push('</div>');
-		s.push('<hr>');
 	
 		// 地图操作区域 start
-		s.push('<div id="',this.el,'" class="kb-workspace" style="width: 100%;height: ',$('#'+this.container).height() - bntBarHeight,'px;overflow: auto;">');
+		s.push('<div id="',this.el,'" class="kb-workspace" >');
 		s.push('<div class="kb-view">');
 		s.push('<div class="kb-image"><img src="',this.image,'" draggable=false /></div>');
 		s.push('<div class="kb-svg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" version="1.1"></svg></div>');
@@ -63,7 +61,10 @@ define(function(require, exports, module) {
 		s.push('</div>');
 		// 地图操作区域 end
 		
-		$('#'+this.container).html(s.join(''));
+		h = $('#'+this.container).html(s.join('')).height();
+		
+		$('#'+this.el).height(h - 2 -$('#'+this.container +' .kb-icon-bar').outerHeight() +'px');
+		
 		this.initEvents();
 		// 绑定dom事件
 		this._bindDomEvent();
@@ -71,7 +72,7 @@ define(function(require, exports, module) {
 	
 	SvgView.prototype._bindDomEvent = function(){
 		var me = this,status = $('#'+this.container+' .kb-icon-bar .kb-active').attr('_status');
-		this.setWidth($('#'+this.el+' .kb-view').width());
+		this.setWidth($('#'+this.container).width());
 		$('#'+this.container+' .kb-icon-bar').on('click','.kb-icon',function(){
 			$(this).addClass('kb-active').siblings('.kb-active').removeClass('kb-active');
 			me.setStatus(this.getAttribute('_status'));

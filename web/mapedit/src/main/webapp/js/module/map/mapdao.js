@@ -33,7 +33,7 @@ define(function(require, exports, module) {
 		var action = getAction(node);
 		if (!action){
 			actions.push({
-				url : '/api/1/node',
+				url : '/api/'+projectId+'/node',
 				type : 'post',
 				dirty : true,
 				fields : 'all',

@@ -72,7 +72,7 @@ define(function(require, exports, module) {
 		
 	};
 	
-	Line.prototype.prototype.getData = function(){
+	Line.prototype.getData = function(){
 		return this.data;
 	};
 	
