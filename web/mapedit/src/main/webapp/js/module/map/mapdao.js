@@ -10,7 +10,7 @@ define(function(require, exports, module) {
 	
 	var fields = {
 			node : {
-				moved : ['x','y']
+				moved : {x:true,y:true}
 			}
 	};
 	
@@ -29,11 +29,12 @@ define(function(require, exports, module) {
 	 * 
 	 * fields
 	 */
-	function insertNode(node){
+	function insertNode(node,projectId){
 		var action = getAction(node);
 		if (!action){
 			actions.push({
-				method : 'insert',
+				url : '/api/1/node',
+				type : 'post',
 				dirty : true,
 				fields : 'all',
 				data : node
@@ -45,13 +46,29 @@ define(function(require, exports, module) {
 	}
 	
 	function updateMovedNode(node){
-		if ((newNodes.indexOf(node)===-1) && (movedNodes.indexOf(node) !== -1)){
-			movedNodes.push(node);
+		var action = getAction(node);
+		if (!action){
+			actions.push({
+				type : 'put',
+				dirty : true,
+				fields : $.extend({},fields.node.moved),
+				data : node
+			});
+		} else {
+			if (action.fields !== 'all'){
+				$.extend(action.fields,fields.node.moved);
+			}
 		}
-		newNodes.push(node);
 		if (!ajaxing){
 			start();
 		}
+	}
+	
+	function delNode(node){
+		actions.push({
+			type : 'delete',
+			url : '/'
+		});
 	}
 	
 	
