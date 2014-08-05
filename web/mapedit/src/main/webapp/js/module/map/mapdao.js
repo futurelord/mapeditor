@@ -6,7 +6,8 @@ define(function(require, exports, module) {
 	"use strict";
 	
 	var actions = [],
-		ajaxing = false;
+		ajaxing = false,
+		statusAjaxing = 'ajaxing';
 	
 	var fields = {
 			node : {
@@ -17,7 +18,7 @@ define(function(require, exports, module) {
 	function getAction(data){
 		var i,action;
 		for (i=0;action=actions[i];i+=1){
-			if (data === action.data){
+			if (action.status !== statusAjaxing && data === action.data){
 				return action;
 			}
 		}
@@ -37,30 +38,52 @@ define(function(require, exports, module) {
 				type : 'post',
 				dirty : true,
 				fields : 'all',
+				time : 0+new Date(),
 				data : node
 			});
 		}
 		if (!ajaxing){
-			start();
+			doAjax();
 		}
 	}
 	
+	function getData(){
+		return JSON.stringify(this.param);
+	}
+	
 	function updateMovedNode(node){
+		
 		var action = getAction(node);
+		var param, key, data = node.getData();
 		if (!action){
+			param = {} ;
+			for (key in fields.node.moved){
+				param[key] = data[key];
+			}
 			actions.push({
+				url : '/api/'+node.map.projectId+'/node/'+node.data.id,
 				type : 'put',
 				dirty : true,
 				fields : $.extend({},fields.node.moved),
+				param : param,
+				getData : getData,
+				time : new Date(),
 				data : node
 			});
 		} else {
+			param = action.param;
 			if (action.fields !== 'all'){
-				$.extend(action.fields,fields.node.moved);
+				for (key in fields.node.moved){
+					param[key] = data[key];
+				}
+			} else {
+				for (key in data){
+					param[key] = data[key];
+				}
 			}
 		}
 		if (!ajaxing){
-			start();
+			doAjax();
 		}
 	}
 	
@@ -71,18 +94,42 @@ define(function(require, exports, module) {
 		});
 	}
 	
+	function ajaxSuccess(json){
+		if (this.type === 'put' || this.type === 'post'){
+			$.extend(this.data.data,json);
+		}
+		if (this.success){
+			this.success();
+		}
+		actions.shift();
+	}
 	
-	function start(){
-		var current = current || newNodes.shift();
-		if (!current){
+	function doAjax(){
+		ajaxing = true;
+		if (actions.length===0){
 			ajaxing = false;
 			return;
 		}
-		ajaxing = true;
-		var data = current.getData();
-		if (data.id){
-			
+		var action = actions[0];
+		if (new Date()-action.time < 2000){
+			setTimeout(doAjax,2000);
+			return;
 		}
+		
+		action.status = statusAjaxing;
+		$.ajax({
+			contentType : 'application/json',
+			url : action.url,
+			type : action.type,
+			data : action.getData(),
+			context : action,
+			success : ajaxSuccess,
+			complete : doAjax
+		});
 	}
+	
+	return {
+		updateMovedNode : updateMovedNode
+	};
 	
 });

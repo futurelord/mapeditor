@@ -68,6 +68,9 @@ define(function(require, exports, module) {
 		this.initEvents();
 		// 绑定dom事件
 		this._bindDomEvent();
+		
+		this.loadMapData();
+		
 	};
 	
 	SvgView.prototype._bindDomEvent = function(){
@@ -81,6 +84,18 @@ define(function(require, exports, module) {
 			this.setStatus(status);
 		}
 		$('#'+this.el).on('mouseover',this,this._mouseoverHandler).on('mouseout',this,this._mouseoutHandler).on('click',this,this._clickHandler);
+	};
+	
+	SvgView.prototype.loadMapData = function(){
+		var me = this;
+		$.ajax({
+			url : '/api/'+this.projectId+'/mapdata/'+this.mapdataId,
+			dataType : 'json',
+			type : 'get',
+			success : function(mapdata){
+				me.setMapData(mapdata);
+			}
+		});
 	};
 	
 	SvgView.prototype.setWidth = function(width){
@@ -338,7 +353,7 @@ define(function(require, exports, module) {
 		if (this.map && this.map.off){
 			this.map.off2(this.mapEvents);
 		}
-		this.map = new Map(data);
+		this.map = new Map({projectId:this.projectId,map:data});
 		$('#'+this.el+' .kb-image img').attr('src',this.map.getMapUrl());
 		this.map.on2(this.mapEvents);
 		this._zoom = this.width/ this.map.getMapWidth();
@@ -542,13 +557,10 @@ define(function(require, exports, module) {
 	
 
 	/**
-	 * 真实距离转换为像素距离
+	 * 真实距离转换为位置比例
 	 * @param s
 	 * @returns
 	 */
-//	SvgView.prototype.toPixel = function(s){
-//		return Math.round(s*this._zoom);
-//	};
 	SvgView.prototype.toXPixel = function(s){
 		return Math.round(s*this.map.getMapWidth()*this._zoom);
 	};
@@ -557,13 +569,10 @@ define(function(require, exports, module) {
 	};
 	
 	/**
-	 * 像素距离转换为真实距离
+	 * 位置比例转换为真实距离
 	 * @param p
 	 * @returns
 	 */
-//	SvgView.prototype.toSize = function(p){
-//		return Math.round(p/this._zoom);
-//	};
 	SvgView.prototype.toXSize = function(p){
 		return p/this._zoom/this.map.getMapWidth();
 	};

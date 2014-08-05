@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 	"use strict";
 	
 	require('ui/events.js');
+	var mapdao = require('./mapdao.js');
 	
 	function Node(data,map){
 		this.data = data;
@@ -24,6 +25,7 @@ define(function(require, exports, module) {
 	Node.prototype.x = function(v){
 		if (typeof v === 'number'){
 			this.data.x = v;
+			mapdao.updateMovedNode(this);
 			return this;
 		}
 		return this.data.x;
@@ -32,6 +34,7 @@ define(function(require, exports, module) {
 	Node.prototype.y = function(v){
 		if (typeof v === 'number'){
 			this.data.y = v;
+			mapdao.updateMovedNode(this);
 			return this;
 		}
 		return this.data.y;
@@ -99,8 +102,8 @@ define(function(require, exports, module) {
  	 * @event selectedNodesMoved(Map map)
 	 * 
 	 */
-	function Map(map){
-		this.map = map;
+	function Map(cfg){
+		$.extend(this,cfg);
 		this.init();
 	};
 	

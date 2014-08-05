@@ -17,13 +17,10 @@
 <script>
 seajs.use(['map/svgview.js'],function(Svgview){
 	
-	var view ;
-	$.get('mapdata.json',{id:1},function(map){
-		if (map){
-			view = new Svgview({
-				container : 'workdiv',
-			}).setMapData(map);
-		}
+	var view = new Svgview({
+		container : 'workdiv',
+		projectId : 1,
+		mapdataId : 1
 	});
 	
 });
