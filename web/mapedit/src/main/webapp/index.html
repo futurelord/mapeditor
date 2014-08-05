@@ -9,6 +9,12 @@
 </div>
 
 <!-- map eidtor start  -->
+<!-- 
+	建议保留 js/module 的目录，这个目录下的js为mapeditor而用，
+	修改的js都是通过seajs加载的，所以相关的js加载不用改变
+	
+	注：此次修改了SvgView的配置参数，现在需要配置 projectId 和 mapdataId ，mapdata会根据拼接出来的url自行通过ajax获取
+ -->
 <link rel="stylesheet" href="css/mapui.css">
 <script src="js/json2-min.js"></script>
 <script src="js/jquery-1.11.0.min.js"></script>
